@@ -55,11 +55,11 @@ export default function LoginPage() {
 
   // From spotify get user's current playing song
   const spotify_authorize_base = 'https://accounts.spotify.com/authorize?';
-  const spotify_id = 'a7b4e4c5e03c48f48bc110f715aecfe2';
-  const spotify_secret = 'bb908b7a9ee543a9b829da99b9056b0c';
+  const spotify_id = `${process.env.REACT_APP_SPOTIFY_CLIENT_ID}`;
+  const spotify_secret = `${process.env.REACT_APP_SPOTIFY_CLIENT_SECRET}`;
   const spotify_redirect_uri = 'http://localhost:3000/callback';
 
-  const genius_client_access_token = '8AwjO4CNeVD50gaNWeCCeWlKFVKRf_YkNTgYaQaNnu9DGDQZawfaBJ3d7YMlk0mf';
+  const genius_client_access_token = `${process.env.REACT_APP_GENIUS_ACCESS_TOKEN}`;
 
   const spotify_authorize_url_full = spotify_authorize_base + new URLSearchParams({
     client_id: spotify_id,
