@@ -1,4 +1,4 @@
-//import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import AppNav from './components/AppNav';
 
 function App() {
