@@ -1,7 +1,11 @@
 import React from 'react'
 
-export default function CreditsPage() {
+export default function CreditsPage(props) {
+  console.log(props.credits_input);
   return (
-    <div>CreditsPage</div>
+    <div>
+      <>Credits Page</>
+      <>{props.credits_input}</>
+    </div>
   )
 }

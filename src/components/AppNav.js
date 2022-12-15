@@ -1,12 +1,26 @@
+// ----- Imports -----
 import React from 'react';
 import {useEffect, useState} from "react";
+
 import axios from 'axios';
 import SpotifyWebApi from "spotify-web-api-js";
+
 import LoginPage from './LoginPage'
+import CreditsPage from './CreditsPage'
+
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route
+//  Link,
+//  BrowserRouter
+} from "react-router-dom";
 
 const spotifyApiFunction = new SpotifyWebApi();
 
-// Function: Gets an access token from the spotify web api
+
+// ----- Side Functions -----
+// Function 1: Gets an access token from the spotify web api
 async function spotify_api_token_caller(code_input, redirect_uri_input, id_input, secret_input) {
 
   const headers = {
@@ -26,7 +40,7 @@ async function spotify_api_token_caller(code_input, redirect_uri_input, id_input
   return response;
 }
 
-// Function: Gets any data from spotify using an access token (specific case: get current song user is playing)
+// Function 2: Gets any data from spotify using an access token (specific case: get current song user is playing)
 async function spotify_api_data_caller(access_token_input) {
 
   spotifyApiFunction.setAccessToken(access_token_input);
@@ -35,7 +49,7 @@ async function spotify_api_data_caller(access_token_input) {
 
 }
 
-// Function: Gets anything from the genius web api
+// Function 3: Gets anything from the genius web api
 async function genius_api_caller(url,token) {
 
   const requestOptions = {
@@ -52,16 +66,20 @@ async function genius_api_caller(url,token) {
   return response.json();
 }
 
+
+// ----- Main Function -----
 export default function AppNav() {
 
-  // From spotify get user's current playing song
+  // Spotify required info
   const spotify_authorize_base = 'https://accounts.spotify.com/authorize?';
   const spotify_id = `${process.env.REACT_APP_SPOTIFY_CLIENT_ID}`;
   const spotify_secret = `${process.env.REACT_APP_SPOTIFY_CLIENT_SECRET}`;
   const spotify_redirect_uri = 'http://localhost:3000/callback';
 
+  // Genius required info
   const genius_client_access_token = `${process.env.REACT_APP_GENIUS_ACCESS_TOKEN}`;
 
+  // Link to Spotify authorization page. Sent when Login button is pressed.
   const spotify_authorize_url_full = spotify_authorize_base + new URLSearchParams({
     client_id: spotify_id,
     response_type: 'code',
@@ -70,22 +88,28 @@ export default function AppNav() {
     show_dialog: 'true'
   });
 
-  // Once received the code after redirect, we must save the code to get the token
+  // Defining useState hooks
+  const [creditsMessage, setCreditsMessage] = useState("");
   const [spotifycode, setSpotifyCode] = useState("");
+
+  // Once received the code after redirect, we must save the code to get the token
+  // NOTE: useEffect hook, with the unnamed dependencies below ("[]"), allows us to only run this code once in the
+  //       first render of this function. Without it, the whole function will run re-render infinitely because of 
+  //       "setSpotifyCode", causing a re-render.
   useEffect(() => {
-    const url_name = window.location.href;
+    console.log('Running useEffect hook');
+    const url_name = window.location.href; // obtaining the current url
     if (url_name.includes('callback?code=')) {
       const callbackPosition = url_name.search('callback') + 14;
       const lastIndexOfUrl = url_name.length;
       const code_response = url_name.substring(callbackPosition, lastIndexOfUrl);
       setSpotifyCode(code_response);
     }
-
   }, []);
 
+  // If Spotify code is present in URL, proceed to get the access token
   if (spotifycode.length>0) {
     console.log('Spotify code is not empty! Code is: ', spotifycode);
-    // Now we have the spotify access code, proceed to get the access token!
     spotify_api_token_caller(spotifycode, spotify_redirect_uri, spotify_id, spotify_secret)
     .then(res_token => {
       console.log('Token Received!: ', res_token.data.access_token);
@@ -116,6 +140,8 @@ export default function AppNav() {
       // Now, to organize the data for the individual categories
       // 1. Print primary artist
       console.log('Primary artist: ', res_genius_song_data.response.song.primary_artist.name);
+      // CHANGING CREDITS MESSAGE
+      setCreditsMessage(res_genius_song_data.response.song.primary_artist.name);
       // 2. Print featured artists
       if (res_genius_song_data.response.song.featured_artists.length>0){
         const featured_artists_list = res_genius_song_data.response.song.featured_artists;
@@ -166,7 +192,12 @@ export default function AppNav() {
 
   return (
     <div className="AppNav">
-      <LoginPage auth_url={spotify_authorize_url_full}/>
+      <Router>
+        <Routes>
+          <Route path='' element={<LoginPage auth_url={spotify_authorize_url_full} />} />
+          <Route path='callback' element={<CreditsPage credits_input={creditsMessage} />} />
+        </Routes>
+      </Router>
     </div>
   );
 }
