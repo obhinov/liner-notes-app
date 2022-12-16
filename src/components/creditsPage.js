@@ -55,6 +55,16 @@ async function genius_api_caller(url,token) {
 }
 
 
+// Function 4: Converts the custom_performances object to a string of comma seperated values (ex: "bob, sarah, steve")
+function comma_string_maker(customPerformances_ArtistList) {
+  const newList = customPerformances_ArtistList.map((item) => (
+    item.name
+  ));
+  const comma_string = newList.join(', ');
+  return comma_string;
+}
+
+
 // ----- Main Function -----
 export default function CreditsPage(props) {
 
@@ -68,7 +78,7 @@ export default function CreditsPage(props) {
   const genius_client_access_token = `${process.env.REACT_APP_GENIUS_ACCESS_TOKEN}`;
 
   // Defining useState hooks
-  const [creditsMessage, setCreditsMessage] = useState({primary_artist_name: '', featured_artists_names: [], writers_names: [], producers_names: [], custom_performances: []});
+  const [creditsMessage, setCreditsMessage] = useState({full_title: '', album_image:'', featured_artists_names: [], writers_names: [], producers_names: [], custom_performances: []});
 
   // Once received the code after redirect, we must save the code to get the token
   // NOTE: useEffect hook, with the unnamed dependencies below ("[]"), allows us to only run this code once in the
@@ -107,28 +117,13 @@ export default function CreditsPage(props) {
       console.log('Genius Song Data Received!: ', res_genius_song_data);
 
       // CHANGING CREDITS MESSAGE
-      setCreditsMessage({primary_artist_name: res_genius_song_data.response.song.primary_artist.name, 
+      setCreditsMessage({full_title: res_genius_song_data.response.song.full_title, 
+        album_image: res_genius_song_data.response.song.song_art_image_url,
         featured_artists_names: res_genius_song_data.response.song.featured_artists, 
         writers_names: res_genius_song_data.response.song.writer_artists, 
         producers_names: res_genius_song_data.response.song.producer_artists,
         custom_performances: res_genius_song_data.response.song.custom_performances});
 
-      // 4. Custom performances
-      if (res_genius_song_data.response.song.custom_performances.length>0){
-        const custom_performances_list = res_genius_song_data.response.song.custom_performances;
-        console.log('Custom Performances:');
-        for (let i=0; i<custom_performances_list.length; i++){
-          if (custom_performances_list[i].artists.length>1){
-            console.log(custom_performances_list[i].label+':');
-            for (let j=0; j<custom_performances_list[i].artists.length; j++){
-              console.log(custom_performances_list[i].artists[j].name);
-            }
-          }
-          else {
-            console.log(`${custom_performances_list[i].label}: ${custom_performances_list[i].artists[0].name}`);
-          }
-        }
-      }
     })
     .catch(err_spotify => {
       console.log('Oh no, an error occured!: ', err_spotify)
@@ -140,9 +135,10 @@ export default function CreditsPage(props) {
       <>CreditsPage</>
       {creditsMessage && 
       <div>
+        <img src={creditsMessage.album_image} />
+
         <div>
-          <h1>Primary Artists</h1>
-          <div>{creditsMessage.primary_artist_name}</div>
+          <h1>{creditsMessage.full_title}</h1>
         </div>
 
         {creditsMessage.featured_artists_names.length!=0 && <div>
@@ -176,9 +172,7 @@ export default function CreditsPage(props) {
           <h1>Custom Performances</h1>
           <ul>
             {creditsMessage.custom_performances.map(item => (
-              <div>
-                <li key={item.label}>{item.label}: </li>
-              </div>
+                <li key={item.label}>{item.label}: {comma_string_maker(item.artists)}</li>
             ))}
           </ul>
         </div>}
