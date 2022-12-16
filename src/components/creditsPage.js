@@ -68,19 +68,13 @@ export default function CreditsPage(props) {
   const genius_client_access_token = `${process.env.REACT_APP_GENIUS_ACCESS_TOKEN}`;
 
   // Defining useState hooks
-  const [creditsMessage, setCreditsMessage] = useState();
+  const [creditsMessage, setCreditsMessage] = useState({primary_artist_name: '', featured_artists_names: [], writers_names: [], producers_names: [], custom_performances: []});
 
   // Once received the code after redirect, we must save the code to get the token
   // NOTE: useEffect hook, with the unnamed dependencies below ("[]"), allows us to only run this code once in the
   //       first render of this function. Without it, the whole function will run re-render infinitely because of 
   //       "setSpotifyCode", causing a re-render. Without "[]", useEffect runs whenever any useState hook changes.
   useEffect(() => {
-    // GET RID OF BELOW, since we already have "spotify_auth_code"
-    /*
-    const callbackPosition = url_name.search('callback') + 14;
-    const lastIndexOfUrl = url_name.length;
-    const code_response = url_name.substring(callbackPosition, lastIndexOfUrl);
-    */
 
     // Now we have the code, proceed to get the access token
     console.log('Spotify code is not empty! Code is: ', spotify_auth_code);
@@ -113,36 +107,12 @@ export default function CreditsPage(props) {
       console.log('Genius Song Data Received!: ', res_genius_song_data);
 
       // CHANGING CREDITS MESSAGE
-      setCreditsMessage(res_genius_song_data);
+      setCreditsMessage({primary_artist_name: res_genius_song_data.response.song.primary_artist.name, 
+        featured_artists_names: res_genius_song_data.response.song.featured_artists, 
+        writers_names: res_genius_song_data.response.song.writer_artists, 
+        producers_names: res_genius_song_data.response.song.producer_artists,
+        custom_performances: res_genius_song_data.response.song.custom_performances});
 
-      // Now, to organize the data for the individual categories
-      // 1. Print primary artist
-      console.log('Primary artist: ', res_genius_song_data.response.song.primary_artist.name);
-      // 2. Print featured artists
-      if (res_genius_song_data.response.song.featured_artists.length>0){
-        const featured_artists_list = res_genius_song_data.response.song.featured_artists;
-        console.log('Featured Artists:');
-        for (let i=0; i<featured_artists_list.length; i++){
-          console.log(featured_artists_list[i].name);
-        }
-      }
-
-      // 2. Print writer artists
-      if (res_genius_song_data.response.song.writer_artists.length>0){
-        const writers_list = res_genius_song_data.response.song.writer_artists;
-        console.log('Writers:')
-        for (let i=0; i<writers_list.length; i++){
-          console.log(writers_list[i].name);
-        }
-      }
-      // 3. Print producer artists
-      if (res_genius_song_data.response.song.producer_artists.length>0){
-        const producers_list = res_genius_song_data.response.song.producer_artists;
-        console.log('Producers:');
-        for (let i=0; i<producers_list.length; i++){
-          console.log(producers_list[i].name);
-        }
-      }
       // 4. Custom performances
       if (res_genius_song_data.response.song.custom_performances.length>0){
         const custom_performances_list = res_genius_song_data.response.song.custom_performances;
@@ -170,13 +140,49 @@ export default function CreditsPage(props) {
       <>CreditsPage</>
       {creditsMessage && 
       <div>
-        <h1>Primary Artists</h1>
-        <div>{creditsMessage.response.song.primary_artist.name}</div>
-        <h1>Featured Artist</h1>
-        <div>{creditsMessage.response.song.featured_artists && <ul>{creditsMessage.response.song.featured_artists.map((item) => {
-          <li>{item.name}</li>
-        })}</ul>}</div>
-        <h1>Producers</h1>
+        <div>
+          <h1>Primary Artists</h1>
+          <div>{creditsMessage.primary_artist_name}</div>
+        </div>
+
+        {creditsMessage.featured_artists_names.length!=0 && <div>
+          <h1>Feature Artists</h1>
+          <ul>
+            {creditsMessage.featured_artists_names.map(artist => (
+              <li key={artist.id}>{artist.name}</li>
+            ))}
+          </ul>
+        </div>}
+
+        {creditsMessage.writers_names.length!=0 && <div>
+          <h1>Writers</h1>
+          <ul>
+            {creditsMessage.writers_names.map(artist => (
+              <li key={artist.id}>{artist.name}</li>
+            ))}
+          </ul>
+        </div>}
+
+        {creditsMessage.producers_names.length!=0 && <div>
+          <h1>Producers</h1>
+          <ul>
+            {creditsMessage.producers_names.map(artist => (
+              <li key={artist.id}>{artist.name}</li>
+            ))}
+          </ul>
+        </div>}
+
+        {creditsMessage.custom_performances.length!=0 && <div>
+          <h1>Custom Performances</h1>
+          <ul>
+            {creditsMessage.custom_performances.map(item => (
+              <div>
+                <li key={item.label}>{item.label}: </li>
+              </div>
+            ))}
+          </ul>
+        </div>}
+        
       </div>}
     </div>
   );
