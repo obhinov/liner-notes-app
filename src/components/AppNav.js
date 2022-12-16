@@ -89,13 +89,15 @@ export default function AppNav() {
   });
 
   // Defining useState hooks
-  const [creditsMessage, setCreditsMessage] = useState("");
-  //const [spotifycode, setSpotifyCode] = useState("");
+  const [creditsMessage, setCreditsMessage] = useState({data: ""});
+  const funcCreditsMessage = (fcm_input) => {
+    setCreditsMessage({data: fcm_input})
+  };
 
   // Once received the code after redirect, we must save the code to get the token
   // NOTE: useEffect hook, with the unnamed dependencies below ("[]"), allows us to only run this code once in the
   //       first render of this function. Without it, the whole function will run re-render infinitely because of 
-  //       "setSpotifyCode", causing a re-render.
+  //       "setSpotifyCode", causing a re-render. Without "[]", useEffect runs whenever any useState hook changes.
   useEffect(() => {
     console.log('Running useEffect hook');
     const url_name = window.location.href; // obtaining the current url
@@ -133,11 +135,15 @@ export default function AppNav() {
   
       .then(res_genius_song_data => {
         console.log('Genius Song Data Received!: ', res_genius_song_data);
+
+        // CHANGING CREDITS MESSAGE
+        //setCreditsMessage(res_genius_song_data);
+        funcCreditsMessage(res_genius_song_data.response.song);
+        //funcCreditsMessage(res_genius_song_data.response.song.primary_artist.name);
+
         // Now, to organize the data for the individual categories
         // 1. Print primary artist
         console.log('Primary artist: ', res_genius_song_data.response.song.primary_artist.name);
-        // CHANGING CREDITS MESSAGE
-        setCreditsMessage(res_genius_song_data.response.song.primary_artist.name);
         // 2. Print featured artists
         if (res_genius_song_data.response.song.featured_artists.length>0){
           const featured_artists_list = res_genius_song_data.response.song.featured_artists;
@@ -146,6 +152,7 @@ export default function AppNav() {
             console.log(featured_artists_list[i].name);
           }
         }
+
         // 2. Print writer artists
         if (res_genius_song_data.response.song.writer_artists.length>0){
           const writers_list = res_genius_song_data.response.song.writer_artists;
