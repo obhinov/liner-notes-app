@@ -1,5 +1,9 @@
+// NOTE: better do import individually rather than {Container, Row, Col}
+
 import React from 'react'
-import { Container, Row, Col } from 'react-bootstrap'
+import Container from 'react-bootstrap/Container'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
 
 export default function LoginPage(props) {
   const spotify_authorize_base = 'https://accounts.spotify.com/authorize?';
@@ -16,19 +20,11 @@ export default function LoginPage(props) {
   });
 
   return (
-    <Container>
-        <Row>
-            <Col className='d-flex justify-content-center align-items-center'>
+    <Container className='d-flex justify-content-center align-items-center'>
+        <Row >
+            <Col >
                 <h1>Liner Notes</h1>
-            </Col>
-        </Row>
-        <Row>
-            <Col className='d-flex justify-content-center align-items-center'>
                 <center>Find detailed credits of songs you're currently listening to on Spotify!</center>
-            </Col>
-        </Row>
-        <Row>
-            <Col className='d-flex justify-content-center align-items-center'>
                 <a className='btn btn-success btn-lg' href={spotify_authorize_url_full}>Login to Spotify</a>
             </Col>
         </Row>

@@ -135,7 +135,7 @@ export default function CreditsPage(props) {
       <>CreditsPage</>
       {creditsMessage && 
       <div>
-        <img src={creditsMessage.album_image} />
+        <img src={creditsMessage.album_image} width="300px" height="auto"  />
 
         <div>
           <h1>{creditsMessage.full_title}</h1>
