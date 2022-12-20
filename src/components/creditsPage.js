@@ -105,9 +105,10 @@ export default function CreditsPage(props) {
       console.log('Spotify Data Received!: ', res_data);
       // Now the spotify data is received, get the genius search results!
       const spotify_song_name = res_data.item.name;
+      const spotify_song_name_cleaned = spotify_song_name.replace(/ *\([^)]*\) */g, "");
       const spotify_song_artist = res_data.item.artists[0].name;
       const genius_api_url = "https://api.genius.com/search?" + new URLSearchParams({
-        q: spotify_song_name + ' ' + spotify_song_artist
+        q: spotify_song_name_cleaned + ' ' + spotify_song_artist
       });
       return genius_api_caller(genius_api_url, genius_client_access_token)
     })
