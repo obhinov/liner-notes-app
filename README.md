@@ -1,70 +1,17 @@
-# Getting Started with Create React App
+# The Liner Notes App
+A web application allowing the user to get detailed credits for a song they're listening to on Spotify. Made using ReactJS and Bootstrap.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## How it Works
+The app first access the user's current playing song using the Spotify Web API through OAuth 2.0 authorization, specifically through the Spotify API's User Authorization Code flow (for more info: https://developer.spotify.com/documentation/general/guides/authorization/code-flow/).
+<br />
+Once the current playing song info is received, we can then access the Genius API to obtain the song's detailed credits, which includes info on the song's featured artists, writers, producers, arrangement credits, engineering credits, publishing info, and whatever else Genius can provide to us.
 
-## Available Scripts
-
-In the project directory, you can run:
-
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Pictures
+The login page:
+<img width="807" alt="app-working-pic_loginPage_v1" src="https://user-images.githubusercontent.com/43919114/208756466-cf1aed38-6898-4ffe-9fac-466eeddf2ce6.PNG">
+<br />
+The credits page (desktop version):
+<img width="831" alt="app-working-pic-thundercatfunnything_v1" src="https://user-images.githubusercontent.com/43919114/208756494-a83751f0-263a-48be-bc3b-062e52b05ed5.PNG">
+<br />
+The credits page (mobile version):
+<img width="298" alt="app-working-pic_mobile-version_dualipaphysical_v1" src="https://user-images.githubusercontent.com/43919114/208756596-6e366504-db41-4a10-bb1a-0d674b026296.PNG">
