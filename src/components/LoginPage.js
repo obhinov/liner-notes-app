@@ -4,6 +4,9 @@ import React from 'react'
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+import Button from 'react-bootstrap/Button';
+
+import Helmet from 'react-helmet';
 
 export default function LoginPage(props) {
   const spotify_authorize_base = 'https://accounts.spotify.com/authorize?';
@@ -20,14 +23,32 @@ export default function LoginPage(props) {
   });
 
   return (
-    <Container className='d-flex justify-content-center align-items-center'>
-        <Row >
-            <Col >
-                <h1>Liner Notes</h1>
-                <center>Find detailed credits of songs you're currently listening to on Spotify!</center>
-                <a className='btn btn-success btn-lg' href={spotify_authorize_url_full}>Login to Spotify</a>
-            </Col>
-        </Row>
-    </Container>
+    <div>
+      <main>
+        <Container>
+            <Row >
+              <Col sm={3}>
+              </Col>
+                <Col sm={9} className='roboto-mono-google-font'>
+                    <h1>The Liner Notes App</h1>
+                    <p>Find detailed credits of songs you're currently listening to on Spotify!</p>
+                    <Button variant='outline-success' href={spotify_authorize_url_full}>Login to Spotify</Button>
+                </Col>
+            </Row>
+        </Container>
+      </main>
+      <footer class="py-3 my-5">
+        <Container className='px-4'>
+          <Row >
+              <Col sm={3}>
+              </Col>
+                <Col sm={9} className='roboto-mono-google-font'>
+                  <p>By Abhinav Subramani, 2022. Made using ReactJS and Bootstrap.</p>
+                </Col>
+            </Row>
+        </Container>
+      </footer>
+    <Helmet bodyAttributes={{style: 'background-color : #fae7b4'}}/>
+    </div>
   )
 }
